@@ -4,12 +4,17 @@ from flask import request, make_response, jsonify
 from ..entities import operation
 from ..services import operation_service, account_service
 from api import api
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from ..decorators.authorization import user_operation
 
 class OperationList(Resource):
+    @jwt_required()
     def get(self):
-        operations = operation_service.list_operation()
+        user = get_jwt_identity()
+        operations = operation_service.list_operation(user)
         os = operation_schema.OperationSchema(many=True)
         return make_response(os.jsonify(operations), 201)
+    @jwt_required()
     def post(self):
         os = operation_schema.OperationSchema()
         validate = os.validate(request.json)
@@ -29,12 +34,14 @@ class OperationList(Resource):
             return make_response(os.jsonify(result), 201) 
 
 class OperationDetail(Resource):
+    @user_operation
     def get(self, id):
         operation =  operation_service.list_operation_by_id(id)
         if operation is None:
             return make_response(jsonify("Operação não encontrada"), 404)
         os = operation_schema.OperationSchema()
         return make_response(os.jsonify(operation), 200)
+    @user_operation
     def put(self, id):
         old_operation = operation_service.list_operation_by_id(id)
         if old_operation is None:
@@ -52,6 +59,7 @@ class OperationDetail(Resource):
             new_operation = operation.Operation(name=name, resume=resume, cost=cost, type=type, account=account)
             result = operation_service.update_operation(old_operation, new_operation)
             return make_response(os.jsonify(result), 201)
+    @user_operation
     def delete(self, id):
         operation = operation_service.list_operation_by_id(id)
         if operation is None:

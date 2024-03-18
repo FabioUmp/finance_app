@@ -1,8 +1,9 @@
 class Account():
-    def __init__(self, name, resume, value):
+    def __init__(self, name, resume, value, user):
         self.__name= name
         self.__resume = resume
         self.__value = value
+        self.__user = user
 
 
     @property
@@ -27,4 +28,12 @@ class Account():
 
     @value.setter
     def value(self, value):
-        self.__value = value  
+        self.__value = value
+
+    @property
+    def user(self):
+        return self.__user
+
+    @user.setter
+    def user(self, user):
+        self.__user = user     

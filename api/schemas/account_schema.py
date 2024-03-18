@@ -9,7 +9,9 @@ class AccountSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = account_model.Account
         load_instance = True
+        include_fk=True
 
         name = fields.String(required=True)
         resume = fields.String(required=True)
         value = fields.String(required=True)
+        user_id = fields.Integer(required=True)

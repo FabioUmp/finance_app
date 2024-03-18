@@ -8,9 +8,9 @@ def register_operation(operation):
     account_service.debit_value(operation.account_id, operation, 2)
     return operation
 
-def list_operation():
-    operations = operation_model.Operation.query.all()
-    return operations
+def list_operation(user):
+    operations = operation_model.Operation.query.join(account_model.Account).filter_by(user_id=user).all()
+    print(operations)
 
 def list_operation_by_id(id):
     operation = operation_model.Operation.query.filter_by(id=id).first()

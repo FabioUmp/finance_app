@@ -3,13 +3,13 @@ from ..models import account_model
 
 
 def register_account(account):
-    account = account_model.Account(name=account.name, resume=account.resume, value=account.value)
-    db.session.add(new_account)
+    account = account_model.Account(name=account.name, resume=account.resume, value=account.value, user_id=account.user)
+    db.session.add(account)
     db.session.commit()
     return account
 
-def list_account():
-    accounts = account_model.Account.query.all()
+def list_account(user):
+    accounts = account_model.Account.query.filter_by( user_id=user).all()
     return accounts
 
 def list_account_by_id(id):
